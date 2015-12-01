@@ -1,4 +1,4 @@
-# 熊沢逸夫著「学習とニューラルネットワーク」の演習問題の回答 in Python
+# 熊沢逸夫著「学習とニューラルネットワーク」演習問題回答 in Python
 
 ![学習とニューラルネットワーク(熊沢逸夫著)](http://ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=4627702914&Format=_SL250_&ID=AsinImage&MarketPlace=JP&ServiceVersion=20070822&WS=1&tag=python-lab-22)
 
