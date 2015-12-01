@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
     num_of_loops = 50000
 
-    for i in [[1, 0, 1], [1, -1, 0],]:
+    for i in [[1, 0, 1], [1, -1, 0], ]:
         num_of_ones = 0
         for l in range(0, num_of_loops):
             if p_element(i):
