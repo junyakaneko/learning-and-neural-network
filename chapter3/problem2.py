@@ -26,27 +26,23 @@ class ProbabilisticElement:
         return self.out(input, alpha, theta)
 
 
-class ProbabilisticAndElement(ProbabilisticElement):
-    def __init__(self):
-        super().__init__(w=[1, 1], alpha=1, theta=1.5)
-
-
 if __name__ == '__main__':
-    """
-    ProbabilisticAndElement に [1, 1] を入力した時、その内部での Sigmoid 関数の出力が約 0.62 なので、
-    [1, 1] を入力した結果が 1 になる確率も約 0.62 となる。
-    """
     #logging.basicConfig(level=logging.DEBUG)
 
-    p_and_element = ProbabilisticAndElement()
+    w = np.array([3, 2, 1])
+    alpha = 1
+    theta = 1
+    p_element = ProbabilisticElement(w, alpha, theta)
 
     num_of_loops = 50000
-    num_of_ones = 0
 
-    for i in range(0, num_of_loops):
-        if p_and_element([1, 1]):
-            num_of_ones += 1
-    probability = num_of_ones / num_of_loops
+    for i in [[1, 0, 1], [1, -1, 0],]:
+        num_of_ones = 0
+        for l in range(0, num_of_loops):
+            if p_element(i):
+                num_of_ones += 1
+        probability = num_of_ones / num_of_loops
 
-    print('Probability of one: ', probability)
-    assert np.round(probability, 2) == 0.62
+        print('Sigmoid: ', sigmoid(w.dot(i), theta=theta))
+        print('Probability of one: \n', probability)
+        assert np.round(probability, 2) == np.round(sigmoid(w.dot(i), theta=theta), 2)
