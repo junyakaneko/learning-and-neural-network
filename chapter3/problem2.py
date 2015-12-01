@@ -44,5 +44,5 @@ if __name__ == '__main__':
         probability = num_of_ones / num_of_loops
 
         print('Sigmoid: ', sigmoid(w.dot(i), theta=theta))
-        print('Probability of one: \n', probability)
+        print('Probability of one: ', probability)
         assert np.round(probability, 2) == np.round(sigmoid(w.dot(i), theta=theta), 2)
