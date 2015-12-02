@@ -1,9 +1,29 @@
 import numpy as np
+from matplotlib import pyplot
 import logging
 
 
 def sigmoid(z, alpha=1, theta=0):
     return 1 / (1 + np.exp(-alpha * (z - theta)))
+
+
+def draw_sigmoid_graphs():
+    dom = np.array([x / 100 for x in range(-300, 300)])
+    alphas = [1, 10, 50, 100]
+
+    nrows = 2
+    ncols = int(len(alphas)/2)
+    for i, alpha in enumerate(alphas):
+        values = np.array([0.0] * len(dom))
+        for j, x in enumerate(dom):
+            values[j] = sigmoid(x, alpha=alpha)
+        pyplot.subplot(nrows, ncols, i + 1)
+        pyplot.title('Alpha = %s' % alpha)
+        pyplot.xlabel('x')
+        pyplot.ylabel('sigmoid(x)')
+        pyplot.plot(dom, values)
+    pyplot.tight_layout()
+    pyplot.show()
 
 
 class Element:
@@ -56,6 +76,8 @@ class XorElement:
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
+
+    draw_sigmoid_graphs()
 
     and_element = AndElement()
     or_element = OrElement()
