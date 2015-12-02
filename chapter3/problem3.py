@@ -34,8 +34,8 @@ class TimeVariantElement:
     @property
     def data_frame(self):
         bin_values = np.array([0] * len(self._values))
-        for value in self._values:
-            bin_values = 0 if value < 0.5 else 1
+        for state in self._states:
+            bin_values = 0 if sigmoid(np.round(state, 4)) < 0.5 else 1
         return pd.DataFrame(data={'states': self._states, 'values': self._values, 'binaries': bin_values}, index=self.domain)
 
     @property
@@ -47,10 +47,11 @@ if __name__ == '__main__':
     """
     alpha の値を大きくするにつれて、x1, x2, x3 の内部状態は時間とともに 0 に負の方向から限りなく近づく様子が見られる。
     しかし、近づくのに限界があるため、本中の解答 (理想) の通りにはいかない (2値化した時に 1 にはならない)。
+    有効数字を設定してやると良い。
     """
-    x1 = TimeVariantElement('x1', [0.0, -2.0, -2.0], 0.0, alpha=100.0)
-    x2 = TimeVariantElement('x2', [-1.0, -2.0, 0.0], 0.0, alpha=100.0)
-    x3 = TimeVariantElement('x3', [0.0, -3.0, -1.0], 0.0, alpha=100.0)
+    x1 = TimeVariantElement('x1', [0.0, -2.0, -2.0], 0.0, alpha=1000000.0)
+    x2 = TimeVariantElement('x2', [-1.0, -2.0, 0.0], 0.0, alpha=1000000.0)
+    x3 = TimeVariantElement('x3', [0.0, -3.0, -1.0], 0.0, alpha=1000000.0)
 
     for i in range(0, 5000):
         x = [x1.value, x2.value, x3.value]
