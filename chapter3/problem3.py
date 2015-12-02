@@ -33,9 +33,9 @@ class TimeVariantElement:
 
     @property
     def data_frame(self):
-        bin_values = np.array([0] * len(self._values))
+        bin_values = []
         for state in self._states:
-            bin_values = 0 if sigmoid(np.round(state, 4)) < 0.5 else 1
+            bin_values.append(0 if sigmoid(np.round(state, 4)) < 0.5 else 1)
         return pd.DataFrame(data={'states': self._states, 'values': self._values, 'binaries': bin_values}, index=self.domain)
 
     @property
@@ -61,7 +61,6 @@ if __name__ == '__main__':
     fig, axes = pyplot.subplots(nrows=3, ncols=3)
 
     for i, elem in enumerate((x1, x2, x3)):
-        print(elem.name, elem.state)
         elem.data_frame['states'].plot(ax=axes[0, i], color='blue')
         elem.data_frame['values'].plot(ax=axes[1, i], color='green')
         elem.data_frame['binaries'].plot(ax=axes[2, i], color='red')
