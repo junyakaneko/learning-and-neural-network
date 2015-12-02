@@ -31,7 +31,6 @@ class TimeVariantElement:
     def domain(self):
         return np.array([i for i in range(0, len(self._states))], np.float) * self._time_delta
 
-
     @property
     def data_frame(self):
         bin_values = np.array([0] * len(self._values))
