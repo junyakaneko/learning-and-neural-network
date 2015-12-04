@@ -41,11 +41,6 @@ def gradient_method(f, rdom, ix, dx, epsilon, nstep=10000):
         for i in range(len(dx)):
             dxi = np.zeros(len(dx), np.float)
             dxi[i] = dx[i]
-            for j in range(len(dxi)):
-                if j != i:
-                    assert dxi[j] == 0.0
-                else:
-                    assert dxi[j] == dx[i]
             nx[i] = x[i] - epsilon * (f(x + dxi) - f(x))/dxi[i]
         nvalue = f(nx)
         if not is_in_domain(nx, rdom) or not is_in_domain(nx + dx, rdom):
