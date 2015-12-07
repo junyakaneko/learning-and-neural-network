@@ -23,6 +23,9 @@ from matplotlib import pyplot
 from time import time
 
 
+__author__ = 'Junya Kaneko <jyuneko@hotmail.com>'
+
+
 class Learner:
     """
     線形近似を行う(y = ax の a を求める)学習器。
@@ -106,7 +109,7 @@ if __name__ == '__main__':
         pyplot.xticks([0, 1], ['Batch', 'Sequential'])
 
         pyplot.subplot(3, 1, 3)
-        pyplot.bar([0, 1], [b_learner.get_error(data), s_learner.get_error(data)], align="center", width=0.4)
+        pyplot.bar([0, 1], [b_learner.get_error(data), s_learner.get_error(data)], align='center', width=0.4)
         pyplot.title("Batch's v.s. sequential's sum of square root error")
         pyplot.xticks([0, 1], ['Batch', 'Sequential'])
 
