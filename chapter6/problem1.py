@@ -38,6 +38,9 @@ class Learner:
     def _get_error(self, data, a):
         return np.array([np.power(x[1] - a * x[0], 2) for x in data]).sum()
 
+    def get_error(self, data):
+        return self._get_error(data, self._a)
+
     def learn(self, data):
         prev_e = np.infty
         start = time()
@@ -71,6 +74,7 @@ if __name__ == '__main__':
         s_success = s_learner.learn([datum, ])
         if s_success:
             s_learning_times.append(s_learner.learning_time)
+            s_success = True
         else:
             s_success = False
             break
@@ -78,7 +82,7 @@ if __name__ == '__main__':
     if b_success and s_success:
         x1, x2 = np.hsplit(data, 2)
 
-        pyplot.subplot(2, 1, 1)
+        pyplot.subplot(3, 1, 1)
         pyplot.scatter(x1, x2, label='Actual data')
         pyplot.plot(x1, [b_learner.get_value(x) for x in x1], label='Batch')
         pyplot.plot(x1, [s_learner.get_value(x) for x in x1], label='Sequential')
@@ -87,9 +91,14 @@ if __name__ == '__main__':
         pyplot.ylabel('x2')
         pyplot.legend(loc="upper left")
 
-        pyplot.subplot(2, 1, 2)
-        pyplot.bar([0, 1], [b_learner.learning_time, np.array(s_learning_times).sum()], align="center", width=0.4)
+        pyplot.subplot(3, 1, 2)
+        pyplot.bar([0, 1], [b_learner.learning_time, np.array(s_learning_times).sum()], align='center', width=0.4)
         pyplot.title("Batch's v.s. sequential's learning time")
+        pyplot.xticks([0, 1], ['Batch', 'Sequential'])
+
+        pyplot.subplot(3, 1, 3)
+        pyplot.bar([0, 1], [b_learner.get_error(data), s_learner.get_error(data)], align="center", width=0.4)
+        pyplot.title("Batch's v.s. sequential's sum of square root error")
         pyplot.xticks([0, 1], ['Batch', 'Sequential'])
 
         pyplot.tight_layout()
