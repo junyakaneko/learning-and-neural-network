@@ -24,6 +24,9 @@ from time import time
 
 
 class Learner:
+    """
+    線形近似を行う(y = ax の a を求める)学習器。
+    """
     def __init__(self, a, da=0.01, epsilon=0.01, nsteps=1000):
         self._a = a
         self._da = da
@@ -61,14 +64,18 @@ class Learner:
 
 
 if __name__ == '__main__':
+    # 学習に使用するデータ
     data = np.array([[1, 1], [2, 2.5], [3, 2.5], [4, 4.5], [5, 4.5]])
 
+    # 一括学習用の学習器 b_learner と 逐次学習器 s_learner
     b_learner = Learner(1)
     s_learner = Learner(1)
 
+    # 一括学習
     b_success = b_learner.learn(data)
-    s_success = False
 
+    # 逐次学習
+    s_success = False
     s_learning_times = []
     for datum in data:
         s_success = s_learner.learn([datum, ])
@@ -79,6 +86,8 @@ if __name__ == '__main__':
             s_success = False
             break
 
+    # 一括学習と逐次学習が両方とも成功している場合に
+    # 求めた近似式のグラフ、学習速度、エラーの大きさ、をグラフ表示
     if b_success and s_success:
         x1, x2 = np.hsplit(data, 2)
 
