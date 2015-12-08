@@ -25,4 +25,4 @@
 * [matplotlib](http://matplotlib.org/)
 
 ## Issues
-* [第6章問題2](https://github.com/JunyaKaneko/learning-and-neural-network/blob/master/chapter6/problem2.py) で近似精度が付録のプログラムの実行結果に比べてすこぶる悪い。
+* [第6章実習2（単一ニューロンによる学習）](https://github.com/JunyaKaneko/learning-and-neural-network/blob/master/chapter6/problem2.py) について書いたプログラムの近似精度が付録のプログラムのものに比べてすこぶる悪い。
