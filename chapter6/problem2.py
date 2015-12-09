@@ -51,7 +51,7 @@ if __name__ == '__main__':
     data = np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [0.0, 0.0, 0.0], [1.0, 3.0, 1.0], [2.0, 1.0, 1.0], [1.5, 2.0, 1.0]])
 
     elements = [
-        Element([np.random.uniform(-5, 5), np.random.uniform(-5, 5)], nloops=10),
+        Element([np.random.uniform(-5, 5), np.random.uniform(-5, 5)], nloops=80),
         Element([np.random.uniform(-5, 5), np.random.uniform(-5, 5)], nloops=100),
         Element([np.random.uniform(-5, 5), np.random.uniform(-5, 5)], nloops=1000),
     ]
@@ -77,7 +77,7 @@ if __name__ == '__main__':
                    np.sum([np.power(datum[-1] - element.get_value(datum[:-1]), 2) for datum in data]),
                    align='center', width=0.4)
     pyplot.xticks(range(len(elements)), [element._nloops for element in elements])
-    pyplot.xlabel('Number of learning loops')
+    pyplot.xlabel('Number of learning loops v.s. square root error')
     pyplot.ylabel('Square root error')
     pyplot.title('Square root errors')
 
