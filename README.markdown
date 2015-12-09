@@ -26,3 +26,6 @@
 
 ## Issues
 * [第6章実習2（単一ニューロンによる学習）](https://github.com/JunyaKaneko/learning-and-neural-network/blob/master/chapter6/problem2.py) について書いたプログラムの近似精度が付録のプログラムのものに比べてすこぶる悪い。
+
+## Wiki
+詳しくは [Wiki](https://github.com/JunyaKaneko/learning-and-neural-network/wiki) へ
