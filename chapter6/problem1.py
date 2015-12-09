@@ -98,19 +98,19 @@ if __name__ == '__main__':
         pyplot.scatter(x1, x2, label='Actual data')
         pyplot.plot(x1, [b_learner.get_value(x) for x in x1], label='Batch')
         pyplot.plot(x1, [s_learner.get_value(x) for x in x1], label='Sequential')
-        pyplot.title('Actual data v.s. approx line')
+        pyplot.title('Actual data and approx line')
         pyplot.xlabel('x1')
         pyplot.ylabel('x2')
         pyplot.legend(loc="upper left")
 
         pyplot.subplot(3, 1, 2)
         pyplot.bar([0, 1], [b_learner.learning_time, np.array(s_learning_times).sum()], align='center', width=0.4)
-        pyplot.title("Batch's v.s. sequential's learning time")
+        pyplot.title("Batch's and sequential's learning time")
         pyplot.xticks([0, 1], ['Batch', 'Sequential'])
 
         pyplot.subplot(3, 1, 3)
         pyplot.bar([0, 1], [b_learner.get_error(data), s_learner.get_error(data)], align='center', width=0.4)
-        pyplot.title("Batch's v.s. sequential's sum of square root error")
+        pyplot.title("Batch's and sequential's sum of square root error")
         pyplot.xticks([0, 1], ['Batch', 'Sequential'])
 
         pyplot.tight_layout()
