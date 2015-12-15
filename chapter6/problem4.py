@@ -81,16 +81,27 @@ class NeuralNetwork:
 
 
 if __name__ == '__main__':
-    network = NeuralNetwork((3, 3, 1))
+    networks = []
+    for i in range(10):
+        networks.append(NeuralNetwork((3, 5, 1)))
 
     xs = [[0.0, 0.0, 0.0], [1.0, 0.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 0.0], [1.0, 0.0, 0.0], [0.0, 0.0, 1.0]]
     ts = [[0.0, ], [0.0, ], [1.0, ], [0.0, ], [1.0, ], [1.0, ]]
 
-    print(network.learn(xs, ts, 0.05, 0.1, 10000))
+    print('===============================')
+    print('Learnings')
+    print('===============================')
+    for network in networks:
+        print(network.learn(xs, ts, 0.05, 0.05, 10000))
 
     xs += [[0.0, 1.0, 0.0], [0.0, 1.1, 1.1]]
     ts += [[1.0, ], [0.0, ]]
 
-    for xi, x in enumerate(xs):
-        print('Answer:', ts[xi][0], 'Output:', network.get_values(x)[0])
-
+    print()
+    print('===============================')
+    print('Answers')
+    print('===============================')
+    for network in networks:
+        print('=============1=============')
+        for xi, x in enumerate(xs):
+            print('Answer:', ts[xi][0], 'Output:', network.get_binaries(x)[0])
