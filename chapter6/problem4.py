@@ -29,61 +29,67 @@ __author__ = 'Junya Kaneko <jyuneko@hotmail.com>'
 
 class NeuralNetwork:
     def __init__(self, shape):
-        self._Ws = [np.random.uniform(-1.0, 1.0, (shape[si], shape[si - 1] + 1)) for si in range(1, len(shape))]
-        self._Ys = []
+        self.W = [np.random.choice((-1.0, 1.0), (shape[i + 1], shape[i] + (1 if i < len(shape) - 1 else 0))) for i in range(len(shape) - 1)]
+        self.dEdS = [np.zeros(len(layer)) for layer in self.W]
+        self.Y = []
 
-    @property
-    def nlayers(self):
-        return len(self._Ws)
+    def error(self, t):
+        assert len(self.Y[-1]) == len(t)
+        return np.power(self.Y[-1] - t, 2).sum()
 
-    def _get_nrows(self, layer_index):
-        return len(self._Ws[layer_index])
+    def f(self, s):
+        return sigmoid(s)
 
-    def _get_ncols(self, layer_index):
-        return len(self._Ws[layer_index][0])
+    def dedy(self, y, t):
+        assert isinstance(y, np.ndarray) and isinstance(t, (np.ndarray, list))
+        return 2.0 * (y - t)
 
-    def _do_back_propagation(self, x, t):
-        y = self.get_values(x)
-        dss = [2.0 * (y - t) * (np.ones(y.shape) - y) * y, ]
-        for li in [-1 - _li for _li in range(self.nlayers - 1)]:
-            dss = [np.zeros(self._get_ncols(li)), ] + dss
-            for j in range(self._get_ncols(li)):
-                for k in range(self._get_nrows(li)):
-                    dss[0][j] += dss[1][k] * self._Ws[li][k][j]
-                if j < self._get_ncols(li) - 1:
-                    dss[0][j] *= (1 - self._Ys[li - 1][j]) * self._Ys[li - 1][j]
-        return dss
+    def dyds(self, l):
+        return (np.ones(self.Y[l].shape) - self.Y[l]) * self.Y[l]
 
-    def _update_coefs(self, dss, epsilon):
-        for li in range(self.nlayers):
-            for j in range(self._get_nrows(li)):
-                for i in range(self._get_ncols(li)):
-                    self._Ws[li][j][i] -= epsilon * dss[li][j] * self._Ys[li][i]
+    def activate(self, x):
+        assert len(x) == len(self.W[0][0]) - 1
+        self.Y = [np.append(x, [1.0, ]), ]
+        for l in range(len(self.W)):
+            self.Y.append(np.ones(len(self.W[l]) + (1 if l < len(self.W[l]) - 1 else 0)))
+            for i, w in enumerate(self.W[l]):
+                self.Y[-1][i] = sigmoid(w.dot(self.Y[-2]))
+        return self.Y[-1]
 
-    def learn(self, xs, ts, epsilon, threshold, nloops):
-        for s in range(nloops):
+    def propagate_backward(self, t):
+        for l in [-1 - _l for _l in range(len(self.W))]:
+            for j in range(len(self.W[l])):
+                for i in range(len(self.W[l][j])):
+                    if l == -1:
+                        self.dEdS[l][j] = self.dedy(self.Y[-1], t)[j] * self.dyds(-1)[j]
+                    else:
+                        for k in range(len(self.W[l + 1])):
+                            self.dEdS[l][j] += self.dEdS[l + 1][k] * self.W[l + 1][k][j]
+                        self.dEdS[l][j] *= self.dyds(l)[j]
+
+    def update_coefs(self, epsilon):
+        for l in [-1 - _l for _l in range(len(self.W))]:
+            for j in range(len(self.W[l])):
+                for i in range(len(self.W[l][j])):
+                    self.W[l][j][i] -= epsilon * self.dEdS[l][j] * self.Y[l - 1][i]
+
+    def learn(self, xs, ts, epsilon=0.05, threshold=0.01, nloops=10000):
+        for n in range(nloops):
             errors = []
             for xi, x in enumerate(xs):
-                self._update_coefs(self._do_back_propagation(x, ts[xi]), epsilon)
-                errors.append(np.linalg.norm(self.get_values(x) - ts[xi]))
-            if np.max(errors) <= threshold:
-                return s + 1, np.max(errors)
-        return nloops, np.max(errors)
-
-    def get_values(self, x):
-        self._Ys = [np.append(x, [1.0, ]), ]
-        for li in range(self.nlayers):
-            self._Ys.append(np.array([sigmoid(s) for s in np.matmul(self._Ws[li], self._Ys[li])] + ([1.0, ] if li < self.nlayers - 1 else [])))
-        return self._Ys[-1]
-
-    def get_binaries(self, x, threshold=0.5):
-        return np.array([0.0 if y < threshold else 1.0 for y in self.get_values(x)])
+                self.activate(x)
+                errors.append(self.error(ts[xi]))
+            if max(errors) < threshold:
+                return n
+            for xi, x in enumerate(xs):
+                self.activate(x)
+                self.propagate_backward(ts[xi])
+                self.update_coefs(epsilon)
+        return nloops
 
 
 if __name__ == '__main__':
-    networks = []
-    for i in range(10):
-        networks.append(NeuralNetwork((3, 5, 1)))
+    networks = [NeuralNetwork((3, 5, 1)) for i in range(5)]
 
     xs = [[0.0, 0.0, 0.0], [1.0, 0.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 0.0], [1.0, 0.0, 0.0], [0.0, 0.0, 1.0]]
     ts = [[0.0, ], [0.0, ], [1.0, ], [0.0, ], [1.0, ], [1.0, ]]
@@ -92,7 +98,7 @@ if __name__ == '__main__':
     print('Learnings')
     print('===============================')
     for network in networks:
-        print(network.learn(xs, ts, 0.05, 0.05, 10000))
+        print('Number of loops', network.learn(xs, ts))
 
     xs += [[0.0, 1.0, 0.0], [0.0, 1.1, 1.1]]
     ts += [[1.0, ], [0.0, ]]
@@ -104,4 +110,4 @@ if __name__ == '__main__':
     for network in networks:
         print('=============1=============')
         for xi, x in enumerate(xs):
-            print('Answer:', ts[xi][0], 'Output:', network.get_binaries(x)[0])
+            print('Answer:', ts[xi][0], 'Output:', network.activate(x)[0])
